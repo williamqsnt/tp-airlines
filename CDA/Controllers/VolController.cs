@@ -3,6 +3,7 @@ using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,21 +24,45 @@ namespace CDA.Controllers
             client = new FireSharp.FirebaseClient(config);
         }
 
-        // GET: VolController
         public ActionResult Index()
         {
-            FirebaseResponse response = client.Get("Vols");
-            dynamic data = JsonConvert.DeserializeObject<dynamic>(response.Body);
+            FirebaseResponse responseVols = client.Get("Vols");
+            var volsData = JsonConvert.DeserializeObject<Dictionary<string, Vol>>(responseVols.Body);
+
+            FirebaseResponse responseVilles = client.Get("Villes");
+            var villesData = JsonConvert.DeserializeObject<Dictionary<string, Ville>>(responseVilles.Body);
+
             var list = new List<Vol>();
-            if (data != null)
+
+            if (volsData != null)
             {
-                foreach (var item in data)
+                foreach (var item in volsData)
                 {
-                    list.Add(JsonConvert.DeserializeObject<Vol>(((JProperty)item).Value.ToString()));
+                    var vol = item.Value;
+                    vol.VolId = item.Key; // Assurer que l'ID du vol est bien défini
+
+                    // Correction: Utiliser les identifiants pour récupérer les objets Ville
+                    // Assumer que chaque vol a des propriétés VilleDepartId et VilleArriveeId pour ces associations
+                    if (villesData != null)
+                    {
+                        if (vol.VilleDepart != null && villesData.ContainsKey(vol.VilleDepart.IdVille))
+                        {
+                            vol.VilleDepart = villesData[vol.VilleDepart.IdVille];
+                        }
+                        if (vol.VilleArrivee != null && villesData.ContainsKey(vol.VilleArrivee.IdVille))
+                        {
+                            vol.VilleArrivee = villesData[vol.VilleArrivee.IdVille];
+                        }
+                    }
+
+                    list.Add(vol);
                 }
             }
+
             return View(list);
         }
+
+
 
         // GET: VolController/Details/5
         public ActionResult Details(string id)
@@ -50,6 +75,18 @@ namespace CDA.Controllers
         // GET: VolController/Create
         public ActionResult Create()
         {
+            FirebaseResponse response = client.Get("Villes"); // Assure-toi que "Villes" est le bon chemin dans ta base de données Firebase
+            dynamic data = JsonConvert.DeserializeObject<dynamic>(response.Body);
+            var villesList = new List<Ville>();
+            if (data != null)
+            {
+                foreach (var item in data)
+                {
+                    villesList.Add(JsonConvert.DeserializeObject<Ville>(((JProperty)item).Value.ToString()));
+                }
+            }
+
+            ViewBag.Villes = new SelectList(villesList, "IdVille", "Nom");
             return View();
         }
 

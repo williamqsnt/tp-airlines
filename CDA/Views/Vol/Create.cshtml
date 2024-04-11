@@ -18,6 +18,15 @@
                 <span asp-validation-for="Reference" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="VilleDepart" class="control-label">Ville de départ</label>
+                <select asp-for="VilleDepart" asp-items="@ViewBag.Villes" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="VilleArrivee" class="control-label">Ville d'arrivée</label>
+                <select asp-for="VilleArrivee" asp-items="@ViewBag.Villes" class="form-control"></select>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="DateDepart" class="control-label"></label>
                 <input asp-for="DateDepart" class="form-control" type="datetime-local" />
                 <span asp-validation-for="DateDepart" class="text-danger"></span>

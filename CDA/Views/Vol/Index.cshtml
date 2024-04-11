@@ -1,59 +1,33 @@
 ﻿@model IEnumerable<CDA.Models.Vol>
 
 @{
-    ViewData["Title"] = "Vols Index";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Vols</h1>
-
-<p>
-    <a asp-action="Create">Create New Vol</a>
-</p>
+<h2>Vols</h2>
+<a asp-action="Create">Create New Vol</a>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Reference)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateDepart)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateArrivee)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VilleDepart.Nom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VilleArrivee.Nom)
-            </th>
-            <th></th>
+            <th>Reference</th>
+            <th>Date Départ</th>
+            <th>Date Arrivée</th>
+            <th>Ville de Départ</th>
+            <th>Ville d'Arrivée</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reference)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDepart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateArrivee)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VilleDepart.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VilleArrivee.Nom)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VolId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VolId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VolId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Reference)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateDepart)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateArrivee)</td>
+                <td>@Html.DisplayFor(modelItem => item.VilleDepart.Nom)</td>
+                <td>@Html.DisplayFor(modelItem => item.VilleArrivee.Nom)</td>
+                <td> <a asp-action="Edit" asp-route-id="@item.VolId">Edit</a> | <a asp-action="Details" asp-route-id="@item.VolId">Details</a> | <a asp-action="Delete" asp-route-id="@item.VolId">Delete</a> </td>
+            </tr>
+        }
     </tbody>
 </table>
